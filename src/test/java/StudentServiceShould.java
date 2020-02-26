@@ -1,5 +1,7 @@
-package app;
-
+import app.AccessMessage;
+import app.Student;
+import app.StudentRepository;
+import app.StudentService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,5 +28,4 @@ public class StudentServiceShould {
         //  Assert
         Assert.assertEquals(AccessMessage.ACCESS_GRANTED, accessStatus);
     }
-
 }
