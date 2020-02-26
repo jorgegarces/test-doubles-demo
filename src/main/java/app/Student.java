@@ -1,5 +1,7 @@
 package app;
 
+import java.util.Objects;
+
 public class Student {
     private String name;
     private final int age;
@@ -17,5 +19,20 @@ public class Student {
 
     public boolean checkAge() {
         return this.age >= 18;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return age == student.age &&
+                name.equals(student.name) &&
+                DNI.equals(student.DNI);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, DNI);
     }
 }

@@ -12,4 +12,8 @@ public class StudentService {
         if (student.checkAge()) return AccessMessage.ACCESS_GRANTED;
         return AccessMessage.ACCESS_DENIED;
     }
+
+    public void add(Student student) {
+        studentRepository.saveStudent(student);
+    }
 }

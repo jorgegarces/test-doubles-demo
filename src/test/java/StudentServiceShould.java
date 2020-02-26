@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -18,20 +19,17 @@ public class StudentServiceShould {
     @Mock
     StudentRepository studentRepository;
 
-    public StudentServiceShould() {
-    }
-
     @Before
     public void Init() {
         MockitoAnnotations.initMocks(this);
 
-        adultStudent.name = "Arota";
+        adultStudent.name = "Adult Student";
         adultStudent.age = 18;
-        adultStudent.DNI = "22222222B";
+        adultStudent.DNI = "00000000A";
 
-        youngStudent.name = "Arita";
+        youngStudent.name = "Underage Student";
         youngStudent.age = 17;
-        youngStudent.DNI = "33333333B";
+        youngStudent.DNI = "11111111A";
     }
 
     @Test
@@ -54,5 +52,15 @@ public class StudentServiceShould {
         AccessMessage accessStatus = studentService.checkAccess("1");
         //  Assert
         Assert.assertEquals(AccessMessage.ACCESS_DENIED, accessStatus);
+    }
+
+    @Test
+    public void send_save_student_data_to_repository() {
+        //  Arrange
+        StudentService studentService = new StudentService(studentRepository);
+        //  Act
+        studentService.add(Student.create(adultStudent));
+        //  Assert
+        verify(studentRepository).saveStudent(Student.create(adultStudent));
     }
 }
