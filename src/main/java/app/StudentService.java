@@ -13,7 +13,7 @@ public class StudentService {
         return AccessMessage.ACCESS_DENIED;
     }
 
-    public void add(Student student) {
+    public void addStudentToRepository(Student student) {
         studentRepository.saveStudent(student);
     }
 }

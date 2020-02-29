@@ -55,11 +55,11 @@ public class StudentServiceShould {
     }
 
     @Test
-    public void send_save_student_data_to_repository() {
+    public void command_repository_to_save_a_new_student() {
         //  Arrange
         StudentService studentService = new StudentService(studentRepository);
         //  Act
-        studentService.add(Student.create(adultStudent));
+        studentService.addStudentToRepository(Student.create(adultStudent));
         //  Assert
         verify(studentRepository).saveStudent(Student.create(adultStudent));
     }
