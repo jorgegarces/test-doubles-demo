@@ -21,6 +21,10 @@ public class Student {
         return this.age >= 18;
     }
 
+    public boolean checkDNI(String DNI) {
+        return this.DNI.equals(DNI);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,3 +1,5 @@
+import TestDoubles.StudentRepositoryFake;
+import TestDoubles.StudentRepositorySpy;
 import app.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,10 +37,22 @@ public class StudentServiceShould {
     public void grant_access_to_students_aged_18_and_older() {
         //  Arrange
         StudentService studentService = new StudentService(studentRepository);
-        when(studentRepository.getStudentByDNI("1")).thenReturn(Student.create(adultStudent));
+        when(studentRepository.getStudentByDNI("00000000A")).thenReturn(Student.create(adultStudent));
         //  Act
-        AccessMessage accessStatus = studentService.checkAccess("1");
+        AccessMessage accessStatus = studentService.checkAccess("00000000A");
         //  Assert
+        Assert.assertEquals(AccessMessage.ACCESS_GRANTED, accessStatus);
+    }
+
+    @Test
+    public void grant_access_to_adult_students_using_a_fake_repo() {
+
+        StudentRepository studentRepositoryFake = new StudentRepositoryFake();
+        StudentService studentService = new StudentService(studentRepositoryFake);
+        studentRepositoryFake.saveStudent(Student.create(adultStudent));
+
+        AccessMessage accessStatus = studentService.checkAccess("00000000A");
+
         Assert.assertEquals(AccessMessage.ACCESS_GRANTED, accessStatus);
     }
 
@@ -46,22 +60,11 @@ public class StudentServiceShould {
     public void deny_access_to_underage_students() {
         //  Arrange
         StudentService studentService = new StudentService(studentRepository);
-        when(studentRepository.getStudentByDNI("1")).thenReturn(Student.create(youngStudent));
+        when(studentRepository.getStudentByDNI("11111111A")).thenReturn(Student.create(youngStudent));
         //  Act
-        AccessMessage accessStatus = studentService.checkAccess("1");
+        AccessMessage accessStatus = studentService.checkAccess("11111111A");
         //  Assert
         Assert.assertEquals(AccessMessage.ACCESS_DENIED, accessStatus);
-    }
-
-    @Test
-    public void grant_access_to_students_aged_18_and_older_using_a_fake_repo() {
-
-        StudentRepositoryFake studentRepositoryFake = new StudentRepositoryFake(adultStudent);
-        StudentService studentService = new StudentService(studentRepositoryFake);
-
-        AccessMessage accessStatus = studentService.checkAccess("1");
-
-        Assert.assertEquals(AccessMessage.ACCESS_GRANTED, accessStatus);
     }
 
     @Test
@@ -75,13 +78,14 @@ public class StudentServiceShould {
     }
 
     @Test
-    public void command_repository_to_save_new_students() {
+    public void command_repository_to_save_two_new_students() {
+
         StudentRepositorySpy studentRepositorySpy = new StudentRepositorySpy();
         StudentService studentService = new StudentService(studentRepositorySpy);
 
         studentService.addStudentToRepository(Student.create(adultStudent));
         studentService.addStudentToRepository(Student.create(youngStudent));
 
-        Assert.assertEquals(2, studentRepositorySpy.saveCount());
+        Assert.assertTrue(studentRepositorySpy.savedStudents(2));
     }
 }

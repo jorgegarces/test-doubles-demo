@@ -1,12 +1,14 @@
+package TestDoubles;
+
 import app.Student;
 import app.StudentRepository;
 
 public class StudentRepositorySpy implements StudentRepository {
 
-    private int counter = 0;
+    int savedStudentsCounter = 0;
 
-    public int saveCount() {
-        return this.counter;
+    public boolean savedStudents(int expectedSavedStudents) {
+        return expectedSavedStudents == savedStudentsCounter;
     }
 
     @Override
@@ -16,6 +18,6 @@ public class StudentRepositorySpy implements StudentRepository {
 
     @Override
     public void saveStudent(Student student) {
-        this.counter++;
+        savedStudentsCounter++;
     }
 }
