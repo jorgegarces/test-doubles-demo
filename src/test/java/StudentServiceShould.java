@@ -7,8 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -55,6 +54,17 @@ public class StudentServiceShould {
     }
 
     @Test
+    public void grant_access_to_students_aged_18_and_older_using_a_fake_repo() {
+
+        StudentRepositoryFake studentRepositoryFake = new StudentRepositoryFake(adultStudent);
+        StudentService studentService = new StudentService(studentRepositoryFake);
+
+        AccessMessage accessStatus = studentService.checkAccess("1");
+
+        Assert.assertEquals(AccessMessage.ACCESS_GRANTED, accessStatus);
+    }
+
+    @Test
     public void command_repository_to_save_a_new_student() {
         //  Arrange
         StudentService studentService = new StudentService(studentRepository);
@@ -62,5 +72,16 @@ public class StudentServiceShould {
         studentService.addStudentToRepository(Student.create(adultStudent));
         //  Assert
         verify(studentRepository).saveStudent(Student.create(adultStudent));
+    }
+
+    @Test
+    public void command_repository_to_save_new_students() {
+        StudentRepositorySpy studentRepositorySpy = new StudentRepositorySpy();
+        StudentService studentService = new StudentService(studentRepositorySpy);
+
+        studentService.addStudentToRepository(Student.create(adultStudent));
+        studentService.addStudentToRepository(Student.create(youngStudent));
+
+        Assert.assertEquals(2, studentRepositorySpy.saveCount());
     }
 }
