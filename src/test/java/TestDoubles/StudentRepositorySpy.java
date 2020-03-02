@@ -5,10 +5,15 @@ import app.StudentRepository;
 
 public class StudentRepositorySpy implements StudentRepository {
 
-    int savedStudentsCounter = 0;
+    private int savedStudentsCounter = 0;
+    private Student lastSavedStudent;
 
     public boolean savedStudents(int expectedSavedStudents) {
         return expectedSavedStudents == savedStudentsCounter;
+    }
+
+    public Student getLastSavedStudent() {
+        return lastSavedStudent;
     }
 
     @Override
@@ -18,6 +23,8 @@ public class StudentRepositorySpy implements StudentRepository {
 
     @Override
     public void saveStudent(Student student) {
+        lastSavedStudent = student;
         savedStudentsCounter++;
     }
+
 }

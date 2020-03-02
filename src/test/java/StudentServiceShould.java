@@ -49,7 +49,7 @@ public class StudentServiceShould {
 
         StudentRepository studentRepositoryFake = new StudentRepositoryFake();
         StudentService studentService = new StudentService(studentRepositoryFake);
-        studentRepositoryFake.saveStudent(Student.create(adultStudent));
+        studentService.addStudentToRepository(Student.create(adultStudent));
 
         AccessMessage accessStatus = studentService.checkAccess("00000000A");
 
@@ -82,10 +82,14 @@ public class StudentServiceShould {
 
         StudentRepositorySpy studentRepositorySpy = new StudentRepositorySpy();
         StudentService studentService = new StudentService(studentRepositorySpy);
+        Student firstStudent = Student.create(adultStudent);
+        Student secondStudent = Student.create(youngStudent);
 
-        studentService.addStudentToRepository(Student.create(adultStudent));
-        studentService.addStudentToRepository(Student.create(youngStudent));
+
+        studentService.addStudentToRepository(firstStudent);
+        studentService.addStudentToRepository(secondStudent);
 
         Assert.assertTrue(studentRepositorySpy.savedStudents(2));
+        Assert.assertEquals(secondStudent, studentRepositorySpy.getLastSavedStudent());
     }
 }
